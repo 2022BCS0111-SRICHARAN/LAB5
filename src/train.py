@@ -8,11 +8,17 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import Lasso
 from sklearn.metrics import mean_squared_error, r2_score
 
+# Define base directories
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(BASE_DIR, "dataset")
+MODELS_DIR = os.path.join(BASE_DIR, "models")
+
 # Create output directory
-os.makedirs("output", exist_ok=True)
+os.makedirs(MODELS_DIR, exist_ok=True)
 
 # Load dataset
-data = pd.read_csv("dataset/winequality-red.csv", sep=';')
+data_path = os.path.join(DATA_DIR, "winequality-red.csv")
+data = pd.read_csv(data_path, sep=';')
 
 # Features and target
 X = data.drop("quality", axis=1)
@@ -47,7 +53,8 @@ print(f"MSE: {mse}")
 print(f"R2 Score: {r2}")
 
 # Save model
-joblib.dump(model, "output/model.pkl")
+model_path = os.path.join(MODELS_DIR, "model.pkl")
+joblib.dump(model, model_path)
 
 # Save results
 results = {
@@ -55,5 +62,6 @@ results = {
     "R2": r2
 }
 
-with open("output/results.json", "w") as f:
+results_path = os.path.join(MODELS_DIR, "results.json")
+with open(results_path, "w") as f:
     json.dump(results, f, indent=4)
